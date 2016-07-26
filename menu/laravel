@@ -172,7 +172,6 @@ EOF
 
 function add_sonar(){
   cat > src/sonar-project.properties << EOF
-<?xml version="1.0" encoding="UTF-8"?>
 sonar.projectKey=$SONAR_KEY
 sonar.projectName=$SONAR_NAME
 sonar.projectVersion=$SONAR_VERSION
