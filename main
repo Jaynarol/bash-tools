@@ -1,11 +1,13 @@
 #!/bin/bash
 
 declare -A MYTOOLS
+PREFIX=https://raw.githubusercontent.com/Jaynarol/bash-tools/master/menu
 
-MYTOOLS[Laravel]=..
+MYTOOLS[Laravel]="${PREFIX}/laravel"
 
 PS3='Please select your tools: '
 select i in "${!MYTOOLS[@]}"
 do
   bash <(curl -s ${MYTOOLS[$i]})
+  break
 done
