@@ -1,11 +1,15 @@
 #!/bin/bash
 
 declare -A MYTOOLS
-#PREFIX=https://raw.githubusercontent.com/Jaynarol/bash-tools/master/menu
+JSON=$(curl -s https://api.github.com/repos/Jaynarol/bash-tools/contents/menu)
 
-JSON=$(curl https://api.github.com/repos/Jaynarol/bash-tools/contents/menu)
-
-MYTOOLS[Laravel]="${PREFIX}/laravel"
+while read -r line; do
+  if [[ $line =~ \"name\".*\"(.*)\" ]]; then
+    name=${BASH_REMATCH[1]}
+  elif [[ $line =~ \"download_url\".*\"(.*)\" ]]; then
+    MYTOOLS[$name]=${BASH_REMATCH[1]}
+  fi
+done <<< "$JSON"
 
 PS3='Please select your tools: '
 select i in "${!MYTOOLS[@]}"
