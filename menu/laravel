@@ -15,14 +15,15 @@ function main(){
   clear
   set_container_name
   while : ; do
-    printf "\n\n[ q:exit | *:test | s:sonar | i:install | u:update ]\n\n"
+    printf "\n\n[ q:exit | *:test | c:coverage | s:sonar | i:install | u:update ]\n\n"
     read -n1 -s
     case "$REPLY" in\
-	"i") clear; install  ;; 
-	"s") clear; sonar    ;; 
-	"u") clear; update   ;; 
-	"q") break            ;; 
-	 * ) clear; test     ;; 
+	"i") clear; install    ;; 
+	"s") clear; sonar      ;; 
+	"u") clear; update     ;; 
+	"c") clear; coverage   ;; 
+	"q") break             ;; 
+	 * ) clear; test       ;; 
     esac
   done
 }
@@ -36,6 +37,17 @@ function test(){
   if [ ! -z $CONTAINER_NAME ]; then
     run_container
     docker exec -it ${CONTAINER_NAME} vendor/bin/phpunit --no-coverage
+  else
+    printf "\n\n!!! The project has not been installed !!!\n\n"
+  fi
+}
+
+
+function coverage(){
+  if [ ! -z $CONTAINER_NAME ]; then
+    run_container
+    docker exec -it ${CONTAINER_NAME} vendor/bin/phpunit
+    start src/storage/phpunit/testdox.html
   else
     printf "\n\n!!! The project has not been installed !!!\n\n"
   fi
