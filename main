@@ -1,6 +1,7 @@
 #!/bin/bash
 
 declare -A MYTOOLS
+MYTOOLS[exit]=''
 JSON=$(curl -s https://api.github.com/repos/Jaynarol/bash-tools/contents/menu)
 
 while read -r line; do
@@ -17,6 +18,9 @@ while : ; do
   PS3=$'\n'"=================================="$'\n'"Please select your tools : "
   select i in "${!MYTOOLS[@]}"
   do
+    if [[ $i == "exit" ]]; then
+      exit
+    fi
     bash <(curl -s ${MYTOOLS[$i]})
     clear
     break
