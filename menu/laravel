@@ -47,7 +47,7 @@ function coverage(){
   if [ ! -z $CONTAINER_NAME ]; then
     run_container
     docker exec -it ${CONTAINER_NAME} vendor/bin/phpunit
-    start src/storage/phpunit/testdox.html
+    start src/storage/phpunit/index.html
   else
     printf "\n\n!!! The project has not been installed !!!\n\n"
   fi
