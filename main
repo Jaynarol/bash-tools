@@ -11,16 +11,12 @@ while read -r line; do
   fi
 done <<< "$JSON"
 
-
 clear
 while : ; do
   printf "==================================\n"
-  PS3=$'\n'"=================================="$'\n'"Please select your tools (0:exit): "
+  PS3=$'\n'"=================================="$'\n'"Please select your tools (q:exit): "
   select i in "${!MYTOOLS[@]}"
   do
-    if [[ $i -eq 0 ]]; then
-      exit
-    fi
     bash <(curl -s ${MYTOOLS[$i]})
     clear
     break
