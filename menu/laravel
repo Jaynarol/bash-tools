@@ -159,6 +159,10 @@ function add_phpunit(){
         <whitelist processUncoveredFilesFromWhitelist="true">
             <directory suffix=".php">./app</directory>
             <exclude>
+                <directory>./app/Console</directory>
+                <directory>./app/Events</directory>
+                <directory>./app/Jobs</directory>
+                <directory>./app/Provinders</directory>
                 <file>./app/Http/routes.php</file>
             </exclude>
         </whitelist>
