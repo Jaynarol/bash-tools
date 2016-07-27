@@ -21,7 +21,7 @@ function main(){
 	"i") clear; install  ;; 
 	"s") clear; sonar    ;; 
 	"u") clear; update   ;; 
-	"q") exit            ;; 
+	"q") break            ;; 
 	 * ) clear; test     ;; 
     esac
   done
@@ -122,7 +122,7 @@ set_project(){
 set_container_name(){
   if [ -z $CONTAINER_NAME ] && [ -f docker-compose.yml ]; then
     eval $(parse_yaml docker-compose.yml "config_")
-    CONTAINER_NAME=${config_services_laravel_container_name[0]}
+    CONTAINER_NAME=${config_services_container_container_name[0]}
   fi
 }
 
@@ -195,7 +195,7 @@ function add_docker_compose(){
 version: "2"
 services:
 
-  laravel:
+  container:
     build: .
     container_name: [wait_container]
     image: [wait_image]

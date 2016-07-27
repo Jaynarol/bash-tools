@@ -1,0 +1,1 @@
+bash.exe --login -c "clear && bash <(curl -s https://raw.githubusercontent.com/Jaynarol/bash-tools/master/main)"
