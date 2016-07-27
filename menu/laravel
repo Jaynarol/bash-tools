@@ -15,7 +15,7 @@ function main(){
   clear
   set_container_name
   while : ; do
-    printf "\n\n[ *:test | s:sonar | i:install | u:update | q:exit ]\n\n"
+    printf "\n\n[ q:exit | *:test | s:sonar | i:install | u:update ]\n\n"
     read -n1 -s
     case "$REPLY" in\
 	"i") clear; install  ;; 
@@ -95,7 +95,7 @@ function run_container(){
   fi
 }
 
-set_project(){
+function set_project(){
 
     while [ -z $IMAGE_NAME ]; do
         read -p "Enter DOCKER image name (ex: $MY_DOCKER_HOST/nova/api): " IMAGE_NAME
@@ -119,7 +119,7 @@ set_project(){
 
 }
 
-set_container_name(){
+function set_container_name(){
   if [ -z $CONTAINER_NAME ] && [ -f docker-compose.yml ]; then
     eval $(parse_yaml docker-compose.yml "config_")
     CONTAINER_NAME=${config_services_container_container_name[0]}

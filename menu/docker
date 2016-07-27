@@ -1,0 +1,27 @@
+#!/bin/bash
+
+
+function main(){
+  clear
+  while : ; do
+cat << EOF
+
+q) Exit
+1) Remove [NONE] Image
+2) Remove [ALL] Image
+3) Remove [EXITED] Container
+4) Remove [ALL] Container
+EOF
+echo "Select your choice :"
+    read -n1 -s
+    case "$REPLY" in\
+	 1 ) clear; docker rmi -f $(docker images -f "dangling=true" -q)        ;; 
+	 2 ) clear; docker rmi -f $(docker images -q)       ;; 
+	 3 ) clear; docker ps -a --no-trunc | egrep 'Exited' | awk '{print $1}' | xargs --no-run-if-empty docker rm -f  ;; 
+	 4 ) clear; docker rm -f $(docker ps -aq)     ;; 
+	"q") break                      ;; 
+    esac
+  done
+}
+
+main

@@ -1,0 +1,39 @@
+#!/bin/bash
+
+
+CONTAINER_NAME=''
+
+
+
+function main(){
+  clear
+  set_container_name
+  while : ; do
+    printf "\n\n[ q:exit | b:build | u:up | d:down | l:logs | e:exec | p:push ]\n\n"
+    read -n1 -s
+    case "$REPLY" in\
+	"b") clear; docker-compose build    ;; 
+	"u") clear; docker-compose up -d    ;; 
+	"d") clear; docker-compose down     ;; 
+	"l") clear; docker-compose logs -f  ;; 
+	"p") clear; docker-compose push     ;; 
+	"e") clear; exec                    ;; 
+	"q") break                          ;; 
+    esac
+  done
+}
+
+function exec(){
+   read -p "Enter new git project name: " $cmd
+   docker exec -it $CONTAINER_NAME $cmd
+}
+
+
+function set_container_name(){
+  if [ -z $CONTAINER_NAME ] && [ -f docker-compose.yml ]; then
+    eval $(parse_yaml docker-compose.yml "config_")
+    CONTAINER_NAME=${config_services_container_container_name[0]}
+  fi
+}
+
+main
