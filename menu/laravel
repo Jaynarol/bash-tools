@@ -242,7 +242,7 @@ src/.sonar/
 EOF
 }
 
-parse_yaml() {
+function parse_yaml() {
     local prefix=$2
     local s
     local w
