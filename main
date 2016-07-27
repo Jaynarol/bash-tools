@@ -14,7 +14,7 @@ done <<< "$JSON"
 clear
 while : ; do
   printf "==================================\n"
-  PS3=$'\n'"=================================="$'\n'"Please select your tools (q:exit): "
+  PS3=$'\n'"=================================="$'\n'"Please select your tools : "
   select i in "${!MYTOOLS[@]}"
   do
     bash <(curl -s ${MYTOOLS[$i]})
