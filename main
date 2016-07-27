@@ -14,7 +14,7 @@ done <<< "$JSON"
 
 clear
 while : ; do
-  printf "\n==================================\n"
+  printf "==================================\n"
   PS3=$'\n'"=================================="$'\n'"Please select your tools (0:exit): "
   select i in "${!MYTOOLS[@]}"
   do
