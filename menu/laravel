@@ -15,13 +15,14 @@ function main(){
   clear
   set_container_name
   while : ; do
-    printf "\n\n[ q:exit | *:test | c:coverage | s:sonar | i:install | u:update ]\n\n"
+    printf "\n\n[ q:exit | *:test | c:coverage | s:sonar | i:install | u:update | e:exec ]\n\n"
     read -n1 -s
     case "$REPLY" in\
 	"i") clear; install    ;; 
 	"s") clear; sonar      ;; 
 	"u") clear; update     ;; 
 	"c") clear; coverage   ;; 
+	"e") clear; exec       ;; 
 	"q") break             ;; 
 	 * ) clear; test       ;; 
     esac
@@ -95,7 +96,14 @@ function update(){
   fi
 }
 
-
+function exec(){
+  if [ ! -z $CONTAINER_NAME ]; then
+    run_container
+    docker exec -it $CONTAINER_NAME bash
+  else
+    printf "\n\n!!! The project has not been installed !!!\n\n"
+  fi
+}
 
 
 
