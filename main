@@ -11,8 +11,11 @@ while read -r line; do
   fi
 done <<< "$JSON"
 
-PS3='Please select your tools: '
-select i in "${!MYTOOLS[@]}"
-do
-  bash <(curl -s ${MYTOOLS[$i]})
+while : ; do
+  PS3='Please select your tools: '
+  select i in "${!MYTOOLS[@]}"
+  do
+    bash <(curl -s ${MYTOOLS[$i]})
+    break
+  done
 done
