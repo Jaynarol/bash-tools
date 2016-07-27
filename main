@@ -16,6 +16,7 @@ while : ; do
   select i in "${!MYTOOLS[@]}"
   do
     bash <(curl -s ${MYTOOLS[$i]})
+    clear
     break
   done
 done
