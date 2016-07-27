@@ -18,7 +18,9 @@ while : ; do
   PS3=$'\n'"=================================="$'\n'"Please select your tools (0:exit): "
   select i in "${!MYTOOLS[@]}"
   do
-    [[ $i -eq 0 ]] && exit
+    if [[ $i -eq 0 ]]; then
+      exit
+    fi
     bash <(curl -s ${MYTOOLS[$i]})
     clear
     break
