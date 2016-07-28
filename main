@@ -1,5 +1,9 @@
 #!/bin/bash
 
+clear;
+echo "Loading..."
+clear;
+
 declare -A MYTOOLS
 MENU=" q ) exit\n"
 JSON=$(curl -s https://api.github.com/repos/Jaynarol/bash-tools/contents/menu)
@@ -28,6 +32,9 @@ while : ; do
   if [[ $REPLY == "q" ]]; then
     clear; exit
   fi
+  clear;
+  echo "Loading..."
+  clear;
   bash <(curl -s ${MYTOOLS[$REPLY]})
 
 done

@@ -170,7 +170,8 @@ function add_phpunit(){
                 <directory>./app/Console</directory>
                 <directory>./app/Events</directory>
                 <directory>./app/Jobs</directory>
-                <directory>./app/Provinders</directory>
+                <directory>./app/Providers</directory>
+                <directory>./app/Exceptions</directory>
                 <file>./app/Http/routes.php</file>
             </exclude>
         </whitelist>
