@@ -236,7 +236,7 @@ services:
       - PHP_XDEBUG=1
       - APP_KEY=[wait_key]
       - APP_DEBUG=true
-      - DB_CONNECTION=sqlite
+      - DB_TEST=true
 EOF
 }
 
