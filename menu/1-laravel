@@ -15,16 +15,18 @@ function main(){
   clear
   set_container_name
   while : ; do
-    printf "\n\n[ q:exit | *:test | c:coverage | s:sonar | i:install | u:update | e:exec ]\n\n"
+    printf "\n\n[ q:exit | *:test-all | g:test-group | c:coverage | s:sonar | i:install | u:update | m:make | e:exec ]\n\n Select => : "
     read -n1 -s
     case "$REPLY" in\
-	"i") clear; install    ;; 
-	"s") clear; sonar      ;; 
-	"u") clear; update     ;; 
-	"c") clear; coverage   ;; 
-	"e") clear; exec       ;; 
-	"q") break             ;; 
-	 * ) clear; test       ;; 
+	"i") clear; install           ;; 
+	"g") clear; test_group        ;; 
+	"s") clear; sonar             ;; 
+	"u") clear; update            ;; 
+	"c") clear; coverage          ;; 
+	"e") clear; exec              ;; 
+	"m") clear; make              ;; 
+	"q") break                    ;; 
+	 * ) clear; test_all          ;; 
     esac
   done
 }
@@ -33,11 +35,21 @@ function main(){
 
 
 
-
-function test(){
+function test_all(){
   if [ ! -z $CONTAINER_NAME ]; then
     run_container
     docker exec -it ${CONTAINER_NAME} vendor/bin/phpunit --no-coverage
+  else
+    printf "\n\n!!! The project has not been installed !!!\n\n"
+  fi
+}
+
+
+function test_group(){
+  if [ ! -z $CONTAINER_NAME ]; then
+    run_container
+    read -p "Enter @group name for tests: " group_name
+    docker exec -it ${CONTAINER_NAME} vendor/bin/phpunit --no-coverage --group $group_name
   else
     printf "\n\n!!! The project has not been installed !!!\n\n"
   fi
@@ -105,6 +117,15 @@ function exec(){
   fi
 }
 
+function make(){
+  if [ ! -z $CONTAINER_NAME ]; then
+    run_containe
+    read -p "php artisan make:" make_text
+    docker exec -it ${CONTAINER_NAME} php artisan make:$make_text
+  else
+    printf "\n\n!!! The project has not been installed !!!\n\n"
+  fi
+}
 
 
 
