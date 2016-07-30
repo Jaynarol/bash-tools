@@ -241,7 +241,7 @@ sonar.sourceEncoding=UTF-8
 sonar.php.coverage.reportPath=/app/storage/phpunit/codeCoverage.xml
 sonar.php.tests.reportPath=/app/storage/phpunit/testResult.xml
 
-sonar.exclusions=app/Http/Kernel.php, app/Providers/**, app/Events/**, app/Console/**, app/Jobs/**, app/Exceptions/**, app/Http/Middleware/**
+sonar.exclusions=app/Http/routes.php, app/Http/Kernel.php, app/Providers/**, app/Events/**, app/Console/**, app/Jobs/**, app/Exceptions/**, app/Http/Middleware/**
 EOF
 }
 
