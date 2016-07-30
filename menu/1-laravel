@@ -15,9 +15,9 @@ function main(){
   clear
   set_container_name
   while : ; do
-    printf "\n\n[ q:exit | *:test-all | g:test-group | c:coverage | s:sonar | i:install | u:update | m:make | e:exec ]\n\n Select => : "
+    printf "\n\n[ q:exit | *:test-all | g:test-group | c:coverage | s:sonar | i:install | u:update | m:make | e:exec ]\n\n"
     read -n1 -s
-    case "$REPLY" in\
+    case "$REPLY" in
 	"i") clear; install           ;; 
 	"g") clear; test_group        ;; 
 	"s") clear; sonar             ;; 
@@ -25,7 +25,7 @@ function main(){
 	"c") clear; coverage          ;; 
 	"e") clear; exec              ;; 
 	"m") clear; make              ;; 
-	"q") break                    ;; 
+	"q") clear; break             ;; 
 	 * ) clear; test_all          ;; 
     esac
   done
@@ -49,7 +49,15 @@ function test_group(){
   if [ ! -z $CONTAINER_NAME ]; then
     run_container
     read -p "Enter @group name for tests: " group_name
-    docker exec -it ${CONTAINER_NAME} vendor/bin/phpunit --no-coverage --group $group_name
+    while : ; do
+      clear
+      docker exec -it ${CONTAINER_NAME} vendor/bin/phpunit --no-coverage --group $group_name
+      printf "\n\n[ q:exit | *:continue tests ($group_name) ]\n\n"
+      read -n1 -s
+      case "$REPLY" in
+	"q") clear; break  ;; 
+      esac
+    done
   else
     printf "\n\n!!! The project has not been installed !!!\n\n"
   fi
