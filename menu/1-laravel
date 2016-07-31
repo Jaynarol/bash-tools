@@ -15,7 +15,7 @@ function main(){
   clear
   set_container_name
   while : ; do
-    printf "\n\n[ q:exit | *:test-all | g:test-group | c:coverage | s:sonar | i:install | u:update | m:make | e:exec ]\n\n"
+    printf "\n\n[ q:exit | *:test-all | g:test-group | c:coverage | s:sonar | i:install | u:update | l:logs | m:make | e:exec ]\n\n"
     read -n1 -s
     case "$REPLY" in
 	"i") clear; install           ;; 
@@ -130,6 +130,15 @@ function make(){
     run_containe
     read -p "php artisan make:" make_text
     docker exec -it ${CONTAINER_NAME} php artisan make:$make_text
+  else
+    printf "\n\n!!! The project has not been installed !!!\n\n"
+  fi
+}
+
+function logs(){
+  if [ ! -z $CONTAINER_NAME ]; then
+    run_containe
+    tail -f src/storage/logs/laravel.log
   else
     printf "\n\n!!! The project has not been installed !!!\n\n"
   fi
