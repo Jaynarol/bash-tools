@@ -128,7 +128,7 @@ function exec(){
 
 function make(){
   if [ ! -z $CONTAINER_NAME ]; then
-    run_containe
+    run_container
     read -p "php artisan make:" make_text
     docker exec -it ${CONTAINER_NAME} php artisan make:$make_text
   else
@@ -138,7 +138,6 @@ function make(){
 
 function logs(){
   if [ ! -z $CONTAINER_NAME ]; then
-    run_containe
     tail -f src/storage/logs/laravel.log
   else
     printf "\n\n!!! The project has not been installed !!!\n\n"
