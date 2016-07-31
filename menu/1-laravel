@@ -25,6 +25,7 @@ function main(){
 	"c") clear; coverage          ;; 
 	"e") clear; exec              ;; 
 	"m") clear; make              ;; 
+	"l") clear; logs              ;; 
 	"q") clear; break             ;; 
 	 * ) clear; test_all          ;; 
     esac
