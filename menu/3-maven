@@ -9,7 +9,7 @@ function main(){
     case "$REPLY" in\
 	"r") clear; project_report                            ;; 
 	"c") clear; coverage_report                           ;; 
-	"s") clear; mvn sonar:sonar                           ;; 
+	"s") clear; mvn clean teest sonar:sonar               ;; 
 	"d") clear; deploy                                    ;; 
 	"o") clear; java_doc                                  ;; 
 	"q") break                                            ;; 
@@ -19,7 +19,7 @@ function main(){
 }
 
 function deploy(){
-    cmd "/c mvn deploy"
+    cmd "/c mvn clean test deploy"
 }
 
 function project_report(){
@@ -28,12 +28,12 @@ function project_report(){
 }
 
 function coverage_report(){
-    mvn cobertura:cobertura
+    mvn clean test cobertura:cobertura
     start target/site/cobertura/index.html
 }
 
 function java_doc(){
-    mvn javadoc:javadoc
+    mvn clean test javadoc:javadoc
     start target/site/apidocs/index.html
 }
 
