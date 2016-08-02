@@ -264,8 +264,6 @@ services:
     build: .
     container_name: [wait_container]
     image: [wait_image]
-    ports:
-      - 80:80
     volumes:
       - ./src:/app
     environment:
