@@ -1,0 +1,37 @@
+#!/bin/bash
+
+function main(){
+  clear
+  while : ; do
+    printf "\n\n[ q:exit | t:test | i:integration-test | c:coverage-report | s:sonar | d:deploy | r:project-report | o:java-doc ]\n\n"
+    read -n1 -s
+    case "$REPLY" in\
+	"i") clear; mvn clean verify -Dskip.unit.test=true    ;; 
+	"r") clear; project_report                            ;; 
+	"c") clear; coverage_report                           ;; 
+	"s") clear; mvn sonar:sonar                           ;; 
+	"d") clear; mvn deploy                                ;; 
+	"o") clear; java_doc                                  ;; 
+	 t ) clear; mvn clean test                            ;; 
+	"q") break                                            ;; 
+    esac
+  done
+}
+
+function project_report(){
+    mvn clean test site
+    start target/site/index.html
+}
+
+function coverage_report(){
+    mvn cobertura:cobertura
+    start target/site/cobertura/index.html
+}
+
+function java_doc(){
+    mvn javadoc:javadoc
+    start target/site/apidocs/index.html
+}
+
+
+main

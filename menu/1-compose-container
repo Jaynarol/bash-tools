@@ -33,7 +33,6 @@ function exec(){
    docker exec -it $CONTAINER_NAME $cmd
 }
 
-
 function set_container_name(){
   if [ -z $CONTAINER_NAME ] && [ -f docker-compose.yml ]; then
     eval $(parse_yaml docker-compose.yml "config_")
