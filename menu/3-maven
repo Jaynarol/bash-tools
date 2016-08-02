@@ -9,7 +9,7 @@ function main(){
     case "$REPLY" in\
 	"r") clear; project_report                            ;; 
 	"c") clear; coverage_report                           ;; 
-	"s") clear; mvn clean teest sonar:sonar               ;; 
+	"s") clear; mvn clean test sonar:sonar                ;; 
 	"d") clear; deploy                                    ;; 
 	"o") clear; java_doc                                  ;; 
 	"q") break                                            ;; 
