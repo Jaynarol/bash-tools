@@ -3,7 +3,7 @@
 function main(){
   clear
   while : ; do
-    printf "\n\n[ q:exit | t:test | i:integration-test | c:coverage-report | s:sonar | d:deploy | r:project-report | o:java-doc ]\n\n"
+    printf "\n\n[ q:exit | *:test | i:integration-test | c:coverage-report | s:sonar | d:deploy | r:project-report | o:java-doc ]\n\n"
     read -n1 -s
     case "$REPLY" in\
 	"i") clear; mvn clean verify -Dskip.unit.test=true    ;; 
@@ -12,7 +12,7 @@ function main(){
 	"s") clear; mvn sonar:sonar                           ;; 
 	"d") clear; mvn deploy                                ;; 
 	"o") clear; java_doc                                  ;; 
-	 t ) clear; mvn clean test                            ;; 
+	 * ) clear; mvn clean test                            ;; 
 	"q") break                                            ;; 
     esac
   done
