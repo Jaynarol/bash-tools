@@ -7,15 +7,19 @@ function main(){
     printf "\n\n[ q:exit | *:test | c:coverage | s:sonar | d:deploy | r:report-project | o:java-doc ]\n\n"
     read -n1 -s
     case "$REPLY" in\
-	"r") clear; project_report                            ;; 
-	"c") clear; coverage_report                           ;; 
-	"s") clear; mvn clean test sonar:sonar                ;; 
-	"d") clear; deploy                                    ;; 
-	"o") clear; java_doc                                  ;; 
-	"q") break                                            ;; 
-	 * ) clear; mvn clean test                            ;; 
+	"r") clear; project_report        ;; 
+	"c") clear; coverage_report       ;; 
+	"s") clear; sonar                 ;; 
+	"d") clear; deploy                ;; 
+	"o") clear; java_doc              ;; 
+	"q") break                        ;; 
+	 * ) clear; mvn clean test        ;; 
     esac
   done
+}
+
+function sonar(){
+    cmd "/c mvn clean test sonar:sonar"
 }
 
 function deploy(){
@@ -23,17 +27,17 @@ function deploy(){
 }
 
 function project_report(){
-    mvn clean test site
+    cmd "/c mvn clean test site"
     start target/site/index.html
 }
 
 function coverage_report(){
-    mvn clean test cobertura:cobertura
+    cmd "/c mvn clean test cobertura:cobertura"
     start target/site/cobertura/index.html
 }
 
 function java_doc(){
-    mvn clean test javadoc:javadoc
+    cmd "/c mvn clean test javadoc:javadoc"
     start target/site/apidocs/index.html
 }
 
