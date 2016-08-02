@@ -3,10 +3,9 @@
 function main(){
   clear
   while : ; do
-    printf "\n\n[ q:exit | *:test | i:integration-test | c:coverage-report | s:sonar | d:deploy | r:project-report | o:java-doc ]\n\n"
+    printf "\n\n[ q:exit | *:test | c:coverage | s:sonar | d:deploy | r:report-project | o:java-doc ]\n\n"
     read -n1 -s
     case "$REPLY" in\
-	"i") clear; mvn clean verify -Dskip.unit.test=true    ;; 
 	"r") clear; project_report                            ;; 
 	"c") clear; coverage_report                           ;; 
 	"s") clear; mvn sonar:sonar                           ;; 
