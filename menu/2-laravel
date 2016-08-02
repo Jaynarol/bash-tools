@@ -284,8 +284,9 @@ MAINTAINER Jaynarol <docker@jaynarol.com>
 COPY ./src /app
 
 RUN chown -R  www-data:www-data /app \\
-    && chmod 644 -R /app \\
-    && chmod 775 -R /app/storage /app/bootstrap/cache
+    && find /app -type d -print0 | xargs -0 chmod 775 \\
+    && find /app -type f -print0 | xargs -0 chmod 644 \\
+    && chmod -R 775 /app/storage
 EOF
 }
 
