@@ -1,5 +1,6 @@
 #!/bin/bash
 
+
 function main(){
   clear
   while : ; do
@@ -9,12 +10,16 @@ function main(){
 	"r") clear; project_report                            ;; 
 	"c") clear; coverage_report                           ;; 
 	"s") clear; mvn sonar:sonar                           ;; 
-	"d") clear; mvn deploy                                ;; 
+	"d") clear; deploy                                    ;; 
 	"o") clear; java_doc                                  ;; 
-	 * ) clear; mvn clean test                            ;; 
 	"q") break                                            ;; 
+	 * ) clear; mvn clean test                            ;; 
     esac
   done
+}
+
+function deploy(){
+    cmd "/c mvn deploy"
 }
 
 function project_report(){
