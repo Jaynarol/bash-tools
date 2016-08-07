@@ -28,7 +28,7 @@ function deploy(){
 }
 
 function package(){
-    cmd "/c mvn clean testpackage"
+    cmd "/c mvn clean test package"
 }
 
 
