@@ -12,7 +12,7 @@ function main(){
 	"s") clear; sonar                 ;; 
 	"d") clear; deploy                ;; 
 	"o") clear; java_doc              ;; 
-	"p") clear; mvn package           ;; 
+	"p") clear; package               ;; 
 	"q") break                        ;; 
 	 * ) clear; mvn clean test        ;; 
     esac
@@ -26,6 +26,11 @@ function sonar(){
 function deploy(){
     cmd "/c mvn clean test deploy"
 }
+
+function package(){
+    cmd "/c mvn clean testpackage"
+}
+
 
 function project_report(){
     cmd "/c mvn clean test site"
@@ -41,6 +46,5 @@ function java_doc(){
     cmd "/c mvn clean test javadoc:javadoc"
     start target/site/apidocs/index.html
 }
-
 
 main
