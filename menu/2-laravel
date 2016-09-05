@@ -269,7 +269,7 @@ services:
     ports:
       - 80:80
     links:
-      - container
+      - container:php
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf:ro
       - ./src:/var/www/html/
@@ -329,7 +329,7 @@ http {
     error_log				off;
 
     upstream php {
-	server container:9000;
+	server php:9000;
     }
 
     server {
