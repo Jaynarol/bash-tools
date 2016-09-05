@@ -15,7 +15,7 @@ function main(){
   clear
   set_container_name
   while : ; do
-    printf "\n\n[ q:exit | *:test-all | g:test-group | c:coverage | s:sonar | i:install | u:update | l:logs | m:make | e:exec ]\n\n"
+    printf "\n\n[ q:exit | *:test-all | g:test-group | c:coverage | s:sonar | i:install | u:update | l:logs | m:make | h:ide-helper-model | e:exec ]\n\n"
     read -n1 -s
     case "$REPLY" in
 	"i") clear; install           ;; 
@@ -26,6 +26,7 @@ function main(){
 	"e") clear; exec              ;; 
 	"m") clear; make              ;; 
 	"l") clear; logs              ;; 
+	"h") clear; ide_helper_model  ;; 
 	"q") clear; break             ;; 
 	 * ) clear; test_all          ;; 
     esac
@@ -79,7 +80,7 @@ function sonar(){
   if [ ! -z $CONTAINER_NAME ]; then
     run_container
     docker exec -it ${CONTAINER_NAME} vendor/bin/phpunit
-    docker run --rm -v /$(pwd)/src:/app -e HOST=${MY_SONAR_HOST} -e TOKEN=${MY_SONAR_TOKEN} jaynarol/sonar-scanner
+    docker run --rm -v /$(pwd)/src:/var/www/html/ -e HOST=${MY_SONAR_HOST} -e TOKEN=${MY_SONAR_TOKEN} jaynarol/sonar-scanner
   else
     printf "\n\n!!! The project has not been installed !!!\n\n"
   fi
@@ -90,17 +91,15 @@ function install(){
     set_project
 
     add_docker_compose
-    add_docker_compose
-    add_dockerfile
     add_gitignore
+    add_nginx_conf
     set_container_name
 
-    docker run --rm -v /$(pwd)/src:/app jaynarol/php-composer:7.0-apache composer create-project --prefer-dist laravel/laravel .
+    docker run --rm -v /$(pwd)/src:/var/www/html/ jaynarol/php-fpm-alpine:7.0-composer composer create-project --prefer-dist laravel/laravel .
     source src/.env
     rm -rf src/.env*
     sed -i "s@\[wait_key\]@$APP_KEY@" docker-compose.yml
     sed -i "s@\[wait_container\]@$CONTAINER_NAME@" docker-compose.yml
-    sed -i "s@\[wait_image\]@$IMAGE_NAME@" docker-compose.yml
 
     add_phpunit
     add_sonar
@@ -111,7 +110,7 @@ function install(){
 
 function update(){
   if [ -d src ]; then
-    docker run --rm -v /$(pwd)/src:/app jaynarol/php-composer:7.0-apache composer update
+    docker run --rm -v /$(pwd)/src:/var/www/html/ jaynarol/php-fpm-alpine:7.0-composer composer update
   else
     printf "\n\n!!! The project has not been installed !!!\n\n"
   fi
@@ -120,7 +119,7 @@ function update(){
 function exec(){
   if [ ! -z $CONTAINER_NAME ]; then
     run_container
-    docker exec -it $CONTAINER_NAME bash
+    docker exec -it $CONTAINER_NAME sh
   else
     printf "\n\n!!! The project has not been installed !!!\n\n"
   fi
@@ -131,6 +130,15 @@ function make(){
     run_container
     read -p "php artisan make:" make_text
     docker exec -it ${CONTAINER_NAME} php artisan make:$make_text
+  else
+    printf "\n\n!!! The project has not been installed !!!\n\n"
+  fi
+}
+
+function ide_helper_model(){
+  if [ ! -z $CONTAINER_NAME ]; then
+    run_container
+    docker exec -it ${CONTAINER_NAME} php artisan ide-helper:models
   else
     printf "\n\n!!! The project has not been installed !!!\n\n"
   fi
@@ -154,10 +162,6 @@ function run_container(){
 }
 
 function set_project(){
-
-    while [ -z $IMAGE_NAME ]; do
-        read -p "Enter DOCKER image name (ex: $MY_DOCKER_HOST/nova/api): " IMAGE_NAME
-    done
 
     while [ -z $CONTAINER_NAME ]; do
         read -p "Enter DOCKER container name (ex: nova-api): " CONTAINER_NAME
@@ -247,8 +251,8 @@ sonar.tests=tests
 sonar.language=php
 sonar.sourceEncoding=UTF-8
 
-sonar.php.coverage.reportPath=/app/storage/phpunit/codeCoverage.xml
-sonar.php.tests.reportPath=/app/storage/phpunit/testResult.xml
+sonar.php.coverage.reportPath=/var/www/html/storage/phpunit/codeCoverage.xml
+sonar.php.tests.reportPath=/var/www/html/storage/phpunit/testResult.xml
 
 sonar.exclusions=app/Http/Kernel.php, app/Providers/**, app/Events/**, app/Console/**, app/Jobs/**, app/Exceptions/**, app/Http/Middleware/**
 EOF
@@ -260,36 +264,28 @@ function add_docker_compose(){
 version: "2"
 services:
 
-  container:
-    build: .
-    container_name: [wait_container]
-    image: [wait_image]
+  nginx:
+    image: nginx:1.11-alpine
+    ports:
+      - 80:80
+    links:
+      - container
     volumes:
-      - ./src:/app
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./src:/var/www/html/
+
+  container:
+    image: jaynarol/php-fpm-alpine:7.0-xdebug
+    container_name: [wait_container]
+    volumes:
+      - ./src:/var/www/html/
     environment:
       - TZ=Asia/Bangkok
-      - PHP_XDEBUG=1
       - APP_KEY=[wait_key]
       - APP_DEBUG=true
       - DB_TEST=true
 EOF
 }
-
-
-function add_dockerfile(){
-  cat > Dockerfile << EOF
-FROM jaynarol/php-composer:7.0-apache
-MAINTAINER Jaynarol <docker@jaynarol.com>
-
-COPY ./src /app
-
-RUN chown -R  www-data:www-data /app \\
-    && find /app -type d -print0 | xargs -0 chmod 775 \\
-    && find /app -type f -print0 | xargs -0 chmod 644 \\
-    && chmod -R 775 /app/storage
-EOF
-}
-
 
 function add_gitignore(){
   cat > .gitignore << EOF
@@ -303,6 +299,59 @@ function add_gitignore(){
 
 # me
 src/.sonar/
+EOF
+}
+
+function add_nginx_conf(){
+  cat > nginx.conf << EOF
+worker_processes auto;
+
+events {
+    worker_connections  1024;
+    multi_accept        on;
+}
+
+
+http {
+
+    sendfile				on;
+    tcp_nopush				on;
+    tcp_nodelay				on;
+    keepalive_timeout			30;
+    types_hash_max_size			2048;
+    server_tokens			off;
+    reset_timedout_connection		on;
+    fastcgi_read_timeout		300;
+
+    include				mime.types;
+    default_type			text/html;
+    access_log				off;
+    error_log				off;
+
+    upstream php {
+	server container:9000;
+    }
+
+    server {
+
+        root		  /var/www/html/public/;
+	index		  index.php index.html index.htm;
+        charset		  utf-8;
+
+        location / {
+            try_files $uri $uri/ /index.php?$query_string;
+	}
+
+        location ~ \.php$ {
+
+                include fastcgi.conf;
+                fastcgi_intercept_errors on;
+                fastcgi_pass php;
+        }
+    }
+
+
+}
 EOF
 }
 
