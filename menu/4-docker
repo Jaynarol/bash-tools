@@ -10,6 +10,7 @@ q) Exit
 1) Remove [EXITED] Container
 2) Remove [DANGLING] Image
 3) Remove [DANGLING] Volume
+4) Remove [DANGLING] Network
 
 i) Remove [ALL] Image
 c) Remove [ALL] Container
@@ -18,14 +19,27 @@ EOF
 echo "Select your choice :"
     read -n1 -s
     case "$REPLY" in\
-	 1 ) clear; docker ps -a --no-trunc | egrep 'Exited' | awk '{print $1}' | xargs --no-run-if-empty docker rm -f  ;; 
+	 1 ) clear; docker rm -f $(docker ps -aqf status=exited)  ;; 
 	 2 ) clear; docker rmi -f $(docker images -qf dangling=true)        ;; 
 	 3 ) clear; docker volume rm $(docker volume ls -qf dangling=true)     ;; 
+	 4 ) clear; cleanNetwork     ;; 
 	 i ) clear; docker rmi -f $(docker images -q)       ;; 
 	 c ) clear; docker rm -f $(docker ps -aq)     ;; 
 	"q") break                      ;; 
     esac
   done
+}
+
+function cleanNetwork {
+	IFS=$'\n' read -rd '' -a networks <<<"$(docker network ls -q)"
+	for i in "${networks[@]}"; do
+		containers="$(docker network inspect -f '{{json .Containers}}' "$i")"
+		name="$(docker network inspect -f '{{json .Name}}' "$i")"
+		if [[ "$containers" == "{}" ]] && [[ "$name" != '"bridge"' ]] && [[ "$name" != '"host"' ]] && [[ "$name" != '"none"' ]]; then
+			#docker network rm "$i"
+			echo "$name"
+		fi
+	done
 }
 
 main
