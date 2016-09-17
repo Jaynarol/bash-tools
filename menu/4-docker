@@ -36,6 +36,7 @@ function cleanNetwork {
 		containers="$(docker network inspect -f '{{json .Containers}}' "$i")"
 		name="$(docker network inspect -f '{{json .Name}}' "$i")"
 		if [[ "$containers" == "{}" ]] && [[ "$name" != '"bridge"' ]] && [[ "$name" != '"host"' ]] && [[ "$name" != '"none"' ]]; then
+			echo "remove network $name"
 			docker network rm "$i"
 		fi
 	done
