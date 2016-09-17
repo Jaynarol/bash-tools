@@ -2,11 +2,11 @@
 
 clear;
 echo "Loading..."
-clear;
 
 declare -A MYTOOLS
 MENU=" q ) exit\n"
-JSON=$(curl -s https://api.github.com/repos/Jaynarol/bash-tools/contents/menu)
+JSON=$(curl -s https://api.github.com/repos/Jaynarol/bash-tools/contents/menu?$(date +%s))
+clear;
 
 while read -r line; do
   if [[ $line =~ \"name\".*\"(.*)\" ]]; then
@@ -34,7 +34,7 @@ while : ; do
   fi
   clear;
   echo "Loading..."
+  bash <(curl -s ${MYTOOLS[$REPLY]}?$(date +%s))
   clear;
-  bash <(curl -s ${MYTOOLS[$REPLY]})
 
 done
