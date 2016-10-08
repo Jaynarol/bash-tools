@@ -280,7 +280,6 @@ services:
     volumes:
       - ./src:/var/www/html/
     environment:
-      - TZ=Asia/Bangkok
       - APP_KEY=[wait_key]
       - APP_DEBUG=true
       - DB_TEST=true
@@ -299,6 +298,7 @@ function add_gitignore(){
 
 # me
 src/.sonar/
+src/storage/phpunit/
 EOF
 }
 
