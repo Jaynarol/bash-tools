@@ -40,7 +40,7 @@ function main(){
 function test_all(){
   if [ ! -z $CONTAINER_NAME ]; then
     run_container
-    docker exec -it ${CONTAINER_NAME} vendor/bin/phpunit --no-coverage
+    docker exec -it ${CONTAINER_NAME} vendor/bin/phpunit --no-coverage --exclude-group integration
   else
     printf "\n\n!!! The project has not been installed !!!\n\n"
   fi
