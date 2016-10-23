@@ -69,7 +69,7 @@ function test_group(){
 function coverage(){
   if [ ! -z $CONTAINER_NAME ]; then
     run_container
-    docker exec -it ${CONTAINER_NAME} vendor/bin/phpunit
+    docker exec -it ${CONTAINER_NAME} vendor/bin/phpunit --exclude-group integration
     start src/storage/phpunit/index.html
   else
     printf "\n\n!!! The project has not been installed !!!\n\n"
@@ -79,7 +79,7 @@ function coverage(){
 function sonar(){
   if [ ! -z $CONTAINER_NAME ]; then
     run_container
-    docker exec -it ${CONTAINER_NAME} vendor/bin/phpunit
+    docker exec -it ${CONTAINER_NAME} vendor/bin/phpunit --exclude-group integration
     docker run --rm -v /$(pwd)/src:/var/www/html/ -e HOST=${MY_SONAR_HOST} -e TOKEN=${MY_SONAR_TOKEN} jaynarol/sonar-scanner
   else
     printf "\n\n!!! The project has not been installed !!!\n\n"
