@@ -13,7 +13,6 @@ SONAR_VERSION=''
 
 function main(){
   clear
-  set_container_name
   while : ; do
     printf "\n\n[ q:exit | *:test-all | g:test-group | c:coverage | s:sonar | i:install | u:update | l:logs | m:make | h:ide-helper-model | e:exec ]\n\n"
     read -n1 -s
@@ -77,13 +76,11 @@ function install(){
     add_docker_compose
     add_gitignore
     add_nginx_conf
-    set_container_name
 
     docker run --rm -v /$(pwd)/src:/var/www/html/ jaynarol/php-fpm-alpine:7.1-composer composer create-project --prefer-dist laravel/laravel .
     source src/.env
     rm -rf src/.env*
     sed -i "s@\[wait_key\]@$APP_KEY@" docker-compose.yml
-    sed -i "s@\[wait_container\]@$CONTAINER_NAME@" docker-compose.yml
 
     add_phpunit
     add_sonar
@@ -237,7 +234,6 @@ services:
 
   container:
     image: jaynarol/php-fpm-alpine:7.1-xdebug
-    container_name: [wait_container]
     volumes:
       - ./src:/var/www/html/
     environment:
