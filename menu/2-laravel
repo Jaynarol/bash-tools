@@ -123,9 +123,8 @@ function logs(){
 
 
 function run_container(){
-  RUNNING=$(docker-compose ps)
-  if [[ $RUNNING =~ .*Up.* ]]; then
-  else
+  RUNNING=$(docker-compose ps -q container)
+  if [[ $RUNNING ==  "" ]]; then
     docker-compose up -d
   fi
 }
