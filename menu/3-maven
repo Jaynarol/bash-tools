@@ -28,6 +28,7 @@ function deploy(){
 }
 
 function package(){
+    rm -rf ./jar
     cmd "/c mvn clean test package"
 }
 
