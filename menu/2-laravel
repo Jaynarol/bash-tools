@@ -14,11 +14,12 @@ SONAR_VERSION=''
 function main(){
   clear
   while : ; do
-    printf "\n\n[ q:exit | *:test-all | g:test-group | c:coverage | s:sonar | i:install | u:update | l:logs | m:make | h:ide-helper-model | e:exec ]\n\n"
+    printf "\n\n[ q:exit | *:test-all | g:test-group | f:test-filter | c:coverage | s:sonar | i:install | u:update | l:logs | m:make | h:ide-helper-model | e:exec ]\n\n"
     read -n1 -s
     case "$REPLY" in
 	"i") clear; install           ;; 
 	"g") clear; test_group        ;; 
+	"f") clear; test_filter       ;; 
 	"s") clear; sonar             ;; 
 	"u") clear; update            ;; 
 	"c") clear; coverage          ;; 
@@ -49,6 +50,21 @@ function test_group(){
       clear
       docker-compose exec container vendor/bin/phpunit --no-coverage --group $group_name
       printf "\n\n[ q:exit | *:continue tests ($group_name) ]\n\n"
+      read -n1 -s
+      case "$REPLY" in
+	"q") clear; break  ;; 
+      esac
+    done
+}
+
+
+function test_filter(){
+    run_container
+    read -p "Enter filter[file|class] name for tests: " filter_name
+    while : ; do
+      clear
+      docker-compose exec container vendor/bin/phpunit --no-coverage --filter $filter_name
+      printf "\n\n[ q:exit | *:continue tests ($filter_name) ]\n\n"
       read -n1 -s
       case "$REPLY" in
 	"q") clear; break  ;; 
