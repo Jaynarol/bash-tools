@@ -82,7 +82,7 @@ function coverage(){
 function sonar(){
     run_container
     docker-compose exec container vendor/bin/phpunit --exclude-group integration
-    docker run --rm -v /$(pwd)/src:/var/www/html/ -e HOST=${MY_SONAR_HOST} -e TOKEN=${MY_SONAR_TOKEN} jaynarol/sonar-scanner
+    docker run --rm -v %cd%/src:/var/www/html/ -e HOST=${MY_SONAR_HOST} -e TOKEN=${MY_SONAR_TOKEN} jaynarol/sonar-scanner
 }
 
 function install(){
@@ -93,7 +93,7 @@ function install(){
     add_gitignore
     add_nginx_conf
 
-    docker run --rm -v /$(pwd)/src:/var/www/html/ jaynarol/php-fpm-alpine:7.1-composer composer create-project --prefer-dist laravel/laravel .
+    docker run --rm -v %cd%/src:/var/www/html/ jaynarol/php-fpm-alpine:7.1-composer composer create-project --prefer-dist laravel/laravel .
     source src/.env
     rm -rf src/.env*
     sed -i "s@\[wait_key\]@$APP_KEY@" docker-compose.yml
@@ -107,7 +107,7 @@ function install(){
 
 function update(){
   if [ -d src ]; then
-    docker run --rm -v /$(pwd)/src:/var/www/html/ jaynarol/php-fpm-alpine:7.1-composer composer update
+    docker run --rm -v %cd%/src:/var/www/html/ jaynarol/php-fpm-alpine:7.1-composer composer update
   else
     printf "\n\n!!! The project has not been installed !!!\n\n"
   fi
