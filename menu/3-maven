@@ -20,16 +20,16 @@ function main(){
 }
 
 function sonar(){
-    cmd "/c mvn clean test sonar:sonar"
+    mvn clean test sonar:sonar
 }
 
 function deploy(){
-    cmd "/c mvn clean test deploy"
+    mvn clean test deploy
 }
 
 function package(){
     rm -rf ./jar
-    cmd "/c mvn clean test package"
+    mvn clean test package
 }
 
 
