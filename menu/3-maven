@@ -34,17 +34,17 @@ function package(){
 
 
 function project_report(){
-    cmd "/c mvn clean test site"
+    mvn clean test site
     start target/site/index.html
 }
 
 function coverage_report(){
-    cmd "/c mvn clean test cobertura:cobertura"
+    mvn clean test cobertura:cobertura
     start target/site/cobertura/index.html
 }
 
 function java_doc(){
-    cmd "/c mvn clean test javadoc:javadoc"
+    mvn clean test javadoc:javadoc
     start target/site/apidocs/index.html
 }
 
